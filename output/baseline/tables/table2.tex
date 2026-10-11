@@ -1,0 +1,41 @@
+\begin{sidewaystable}[p]
+\centering
+\caption{Main Fuel Cost Pass-Through Specifications}
+\label{tab:main\_passthrough}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.9}
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{6}{c}}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}\\
+                    &\multicolumn{1}{c}{Fuel + HHI}&\multicolumn{1}{c}{+Inflation}&\multicolumn{1}{c}{+Fuel$\times$Inf.}&\multicolumn{1}{c}{+Fuel$\times$HHI}&\multicolumn{1}{c}{+Both Fuel Interactions}&\multicolumn{1}{c}{+Triple}\\
+\hline \\[-1.8ex]
+Fuel Growth         &       0.469\sym{***}&       0.415\sym{***}&       0.255\sym{***}&       0.306\sym{***}&       0.151\sym{***}&       0.224\sym{***}\\
+                    &   (0.00842)         &   (0.00829)         &    (0.0112)         &    (0.0528)         &    (0.0542)         &    (0.0638)         \\
+High HHI            &       6.405\sym{***}&       6.146\sym{***}&       4.207\sym{***}&       5.420\sym{***}&       3.509\sym{**} &       3.154\sym{*}  \\
+                    &     (1.619)         &     (1.564)         &     (1.540)         &     (1.481)         &     (1.472)         &     (1.628)         \\
+High Inflation      &                     &       9.358\sym{***}&       7.944\sym{***}&       9.299\sym{***}&       7.889\sym{***}&       7.156\sym{***}\\
+                    &                     &     (0.484)         &     (0.455)         &     (0.486)         &     (0.457)         &     (2.088)         \\
+Fuel Growth $\times$ High Inflation&                     &                     &       0.247\sym{***}&                     &       0.247\sym{***}&       0.137         \\
+                    &                     &                     &    (0.0158)         &                     &    (0.0158)         &    (0.0951)         \\
+Fuel Growth $\times$ High HHI&                     &                     &                     &       0.112\sym{**} &       0.108\sym{**} &      0.0311         \\
+                    &                     &                     &                     &    (0.0538)         &    (0.0550)         &    (0.0649)         \\
+High Inflation $\times$ High HHI&                     &                     &                     &                     &                     &       0.789         \\
+                    &                     &                     &                     &                     &                     &     (2.155)         \\
+Fuel Growth $\times$ High Inflation $\times$ High HHI&                     &                     &                     &                     &                     &       0.113         \\
+                    &                     &                     &                     &                     &                     &    (0.0963)         \\
+\hline \\[-1.8ex]
+Observations        &       8,363         &       8,363         &       8,363         &       8,363         &       8,363         &       8,363         \\
+Controls            &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Route FE            &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Carrier FE          &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Kleibergen-Paap F   &    17554.26         &    18835.62         &    12192.18         &     9065.32         &     5889.98         &     5534.95         \\
+R-squared           &       0.475         &       0.494         &       0.513         &       0.494         &       0.513         &       0.514         \\
+\hline \\[-1.8ex]
+\end{tabular}
+\begin{tablenotes}[Note]
+All specifications are estimated via 2SLS. Fuel growth and its endogenous interaction terms are instrumented with U.S. jet fuel growth and the corresponding interaction instruments. High Inflation is defined as inflation $>3\%$; High HHI is defined as HHI $>2500$. Continuous inflation and continuous HHI are excluded from Table 2; regime dummies are included instead. Controls are income growth and population growth. Route and carrier fixed effects are absorbed. Robust standard errors are in parentheses. Kleibergen-Paap F reports the Kleibergen-Paap rk Wald F statistic when available.\sym{*}~$p<0.10$, \sym{**}~$p<0.05$, \sym{***}~$p<0.01$.
+\end{tablenotes}
+\end{sidewaystable}

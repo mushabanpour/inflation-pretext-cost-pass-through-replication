@@ -1,0 +1,33 @@
+\begin{table}[p]
+\centering
+\caption{Heterogeneity in Fuel Cost Pass-Through by Carrier and Carrier Type}
+\label{tab:carrier_heterogeneity}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.9}
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{3}{c}}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+            &\multicolumn{1}{c}{Baseline Pass-Through}&\multicolumn{1}{c}{High-Inflation Increment}&\multicolumn{1}{c}{High-HHI Increment}\\
+\hline \\[-1.8ex]
+Legacy & 0.496\sym{***} & 0.326\sym{***} & 0.183\sym{**} \\
+            & (0.012) & (0.021) & (0.087) \\
+LCC & 0.388\sym{***} & 0.230\sym{***} & 0.109 \\
+            & (0.017) & (0.033) & (0.099) \\
+ULCC & 0.476\sym{***} & 0.287\sym{***} & 0.178\sym{*} \\
+            & (0.016) & (0.032) & (0.105) \\
+\hline \\[-1.8ex]
+Observations & 8,363 & 8,363 & 8,363 \\
+Controls & Yes & Yes & Yes \\
+Route FE & Yes & Yes & Yes \\
+Carrier FE & Yes & Yes & Yes \\
+Kleibergen-Paap F & 1787.65 & 1147.53 & 872.97 \\
+R-squared & 0.476 & 0.503 & 0.477 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\begin{tablenotes}[Note]
+All specifications are estimated via 2SLS. Fuel growth and its interactions are instrumented with rivals' fuel growth and matching interactions. Column (1) reports baseline fuel-cost pass-through. Column (2) reports high-inflation minus low-inflation pass-through. Column (3) reports high-HHI minus low-HHI pass-through. High inflation is defined as inflation $>3\%$; high HHI is defined as HHI $>2500$. Controls are income growth and population growth. Route and carrier fixed effects are absorbed. Robust standard errors are in parentheses. Kleibergen-Paap F reports the Kleibergen-Paap rk Wald F statistic when available.\sym{*}~$p<0.10$, \sym{**}~$p<0.05$, \sym{***}~$p<0.01$.
+\end{tablenotes}
+\end{table}

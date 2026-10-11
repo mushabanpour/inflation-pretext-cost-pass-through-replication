@@ -1,0 +1,30 @@
+\begin{table}[p]
+\centering
+\caption{Fuel Cost Pass-Through by Inflation and Market Concentration}
+\label{tab:inflation\_concentration}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.9}
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{4}{c}}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+                    &\multicolumn{2}{c}{Low Inflation}          &\multicolumn{2}{c}{High Inflation}         \\\cline{2-3}\cline{4-5}
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}\\
+                    &\multicolumn{1}{c}{Low HHI}&\multicolumn{1}{c}{High HHI}&\multicolumn{1}{c}{Low HHI}&\multicolumn{1}{c}{High HHI}\\
+\hline \\[-1.8ex]
+Fuel Growth         &       0.244\sym{***}&       0.256\sym{***}&       0.240\sym{***}&       0.502\sym{***}\\
+                    &    (0.0692)         &    (0.0112)         &    (0.0569)         &    (0.0115)         \\
+\hline \\[-1.8ex]
+Observations        &         193         &       4,837         &         120         &       3,213         \\
+Controls            &         Yes         &         Yes         &         Yes         &         Yes         \\
+Route FE            &         Yes         &         Yes         &         Yes         &         Yes         \\
+Carrier FE          &         Yes         &         Yes         &         Yes         &         Yes         \\
+Kleibergen-Paap F   &      821.10         &    14212.13         &      275.70         &     9688.21         \\
+R-squared           &       0.174         &       0.257         &       0.225         &       0.502         \\
+\hline \\[-1.8ex]
+\end{tabular}
+\begin{tablenotes}[Note]
+All specifications are estimated via 2SLS. Fuel growth is instrumented with rivals' fuel growth. Columns split the sample by inflation and route-level concentration. High Inflation is defined as inflation $>3\%$; High HHI is defined as HHI $>2500$. HHI is divided by 1000 in the estimation dataset. Controls are income growth and population growth. Route and carrier fixed effects are absorbed. Robust standard errors are in parentheses. Kleibergen-Paap F reports the Kleibergen-Paap rk Wald F statistic when available.\sym{*}~$p<0.10$, \sym{**}~$p<0.05$, \sym{***}~$p<0.01$.
+\end{tablenotes}
+\end{table}

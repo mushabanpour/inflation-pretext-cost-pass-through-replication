@@ -1,0 +1,1022 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/event_study/logs/dynamic-pass-through.log
+  log type:  text
+ opened on:  17 Aug 2026, 13:49:53
+
+. 
+. use "$data", clear
+
+. xtset panel_id quarter_date
+
+Panel variable: panel_id (unbalanced)
+ Time variable: quarter_date, 2014q1 to 2025q1, but with gaps
+         Delta: 1 quarter
+
+. 
+. *----------------------------
+. * 1) Graph style
+. *----------------------------
+. set scheme s1mono
+
+. graph set window fontface "Helvetica"   // use "Arial" on Windows
+
+. 
+. local lc   "navy"
+
+. local lc2  "cranberry"
+
+. local lw   "thin"
+
+. 
+. local title_opt  size(small)  color(black) margin(b=2)
+
+. local axis_opt   size(vsmall) color(gs4)
+
+. local note_opt   size(tiny)   color(gs8)
+
+. 
+. local region  plotregion(color(white) lcolor(none)) ///
+>               graphregion(color(white) margin(medsmall) lwidth(vthin))
+
+. 
+. *----------------------------
+. * 2-3) Fuel growth & high-inflation indicator
+. *      us_jetfuel_growth and high_inf are pre-built in rkt_ready.dta
+. *      (by build_rkt_ready.do); no reconstruction needed here.
+. *      NOTE: us_jetfuel_gallon is no longer in the dataset - the growth
+. *      series itself is provided directly.
+. *----------------------------
+. 
+. *----------------------------
+. * 4) Carrier-level fuel shocks
+. *----------------------------
+. local p 4
+
+. 
+. capture drop fuel_shock rfuel_shock
+
+. preserve
+
+.     keep carrier_id quarter_date fuel_growth us_jetfuel_growth ppi_transport
+
+.     duplicates drop carrier_id quarter_date, force
+
+Duplicates in terms of carrier_id quarter_date
+
+(9,608 observations deleted)
+
+.     xtset carrier_id quarter_date
+
+Panel variable: carrier_id (strongly balanced)
+ Time variable: quarter_date, 2014q1 to 2025q1
+         Delta: 1 quarter
+
+. 
+.     xtreg fuel_growth L(1/`p').fuel_growth L(1/`p').ppi_transport, ///
+>           fe vce(robust)
+
+Fixed-effects (within) regression               Number of obs     =        254
+Group variable: carrier_id                      Number of groups  =          8
+
+R-squared:                                      Obs per group:
+     Within  = 0.7193                                         min =         21
+     Between = 0.9759                                         avg =       31.8
+     Overall = 0.7227                                         max =         37
+
+                                                F(7, 7)           =          .
+corr(u_i, Xb) = 0.1009                          Prob > F          =          .
+
+                              (Std. err. adjusted for 8 clusters in carrier_id)
+-------------------------------------------------------------------------------
+              |               Robust
+  fuel_growth | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+  fuel_growth |
+          L1. |   .3393502   .0654826     5.18   0.001     .1845086    .4941919
+          L2. |    .065733   .0431639     1.52   0.172    -.0363334    .1677993
+          L3. |   .0578849   .0262752     2.20   0.063     -.004246    .1200158
+          L4. |  -.1302992   .0160545    -8.12   0.000    -.1682619   -.0923364
+              |
+ppi_transport |
+          L1. |      4.138   .3982652    10.39   0.000     3.196253    5.079748
+          L2. |  -1.533163   .4740894    -3.23   0.014    -2.654206   -.4121194
+          L3. |   -2.99076   .5147571    -5.81   0.001    -4.207967   -1.773553
+          L4. |   .2390171   .3373642     0.71   0.502    -.5587225    1.036757
+              |
+        _cons |   19.56703   5.412515     3.62   0.009     6.768463    32.36559
+--------------+----------------------------------------------------------------
+      sigma_u |  2.2804324
+      sigma_e |  20.229163
+          rho |  .01254857   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------
+
+.     predict double fuel_shock_car, resid
+(106 missing values generated)
+
+. 
+.     xtreg us_jetfuel_growth L(1/`p').us_jetfuel_growth ///
+>           L(1/`p').ppi_transport, fe vce(robust)
+
+Fixed-effects (within) regression               Number of obs     =        296
+Group variable: carrier_id                      Number of groups  =          8
+
+R-squared:                                      Obs per group:
+     Within  = 0.6679                                         min =         37
+                                                              avg =       37.0
+     Overall = 0.6679                                         max =         37
+
+                                                F(1, 7)           =          .
+corr(u_i, Xb) =      .                          Prob > F          =          .
+
+                                  (Std. err. adjusted for 8 clusters in carrier_id)
+-----------------------------------------------------------------------------------
+                  |               Robust
+us_jetfuel_growth | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+us_jetfuel_growth |
+              L1. |   .5824354   1.75e-10  3.3e+09   0.000     .5824354    .5824354
+              L2. |  -.2336622   2.22e-10 -1.1e+09   0.000    -.2336622   -.2336622
+              L3. |   .1984771   4.26e-10  4.7e+08   0.000     .1984771    .1984771
+              L4. |  -.0973247   1.79e-09 -5.4e+07   0.000    -.0973247   -.0973247
+                  |
+    ppi_transport |
+              L1. |   2.294075   1.20e-08  1.9e+08   0.000     2.294075    2.294075
+              L2. |   2.979304   9.76e-09  3.1e+08   0.000     2.979304    2.979304
+              L3. |  -8.178787   7.70e-09 -1.1e+09   0.000    -8.178787   -8.178787
+              L4. |   2.591945   2.39e-09  1.1e+09   0.000     2.591945    2.591945
+                  |
+            _cons |   45.25571   1.70e-06  2.7e+07   0.000      45.2557    45.25571
+------------------+----------------------------------------------------------------
+          sigma_u |          0
+          sigma_e |  27.327181
+              rho |          0   (fraction of variance due to u_i)
+-----------------------------------------------------------------------------------
+
+.     predict double rfuel_shock_car, resid
+(64 missing values generated)
+
+. 
+.     tempfile shocks
+
+.     keep carrier_id quarter_date fuel_shock_car rfuel_shock_car
+
+.     save `shocks', replace
+(file /var/folders/yd/9k_sc8p93hv9zlrnbll3b_x00000gn/T//S_55631.000002 not found)
+file /var/folders/yd/9k_sc8p93hv9zlrnbll3b_x00000gn/T//S_55631.000002 saved as .dta format
+
+. restore
+
+. 
+. merge m:1 carrier_id quarter_date using `shocks', nogen keep(match master)
+(label carrier_id already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             9,968  
+    -----------------------------------------
+
+. rename fuel_shock_car  fuel_shock
+
+. rename rfuel_shock_car rfuel_shock
+
+. 
+. xtset panel_id quarter_date
+
+Panel variable: panel_id (unbalanced)
+ Time variable: quarter_date, 2014q1 to 2025q1, but with gaps
+         Delta: 1 quarter
+
+. 
+. *----------------------------
+. * 5) Event-study leads / lags  *** K = 4 ***
+. *----------------------------
+. local K 4
+
+. 
+. forvalues k = 1/`K' {
+  2.     gen fs_l`k'  = L`k'.fuel_shock
+  3.     gen fs_f`k'  = F`k'.fuel_shock
+  4.     gen rfs_l`k' = L`k'.rfuel_shock
+  5.     gen rfs_f`k' = F`k'.rfuel_shock
+  6. }
+(2,900 missing values generated)
+(2,689 missing values generated)
+(1,916 missing values generated)
+(1,709 missing values generated)
+(3,229 missing values generated)
+(2,814 missing values generated)
+(2,276 missing values generated)
+(1,875 missing values generated)
+(3,485 missing values generated)
+(2,869 missing values generated)
+(2,546 missing values generated)
+(1,957 missing values generated)
+(3,726 missing values generated)
+(2,906 missing values generated)
+(2,789 missing values generated)
+(2,021 missing values generated)
+
+. gen fs_0  = fuel_shock
+(2,472 missing values generated)
+
+. gen rfs_0 = rfuel_shock
+(1,445 missing values generated)
+
+. 
+. *----------------------------
+. * 6) Interactions with high_inf
+. *----------------------------
+. forvalues k = 1/`K' {
+  2.     gen hf_fs_l`k'  = fs_l`k'  * high_inf
+  3.     gen hf_fs_f`k'  = fs_f`k'  * high_inf
+  4.     gen hf_rfs_l`k' = rfs_l`k' * high_inf
+  5.     gen hf_rfs_f`k' = rfs_f`k' * high_inf
+  6. }
+(2,900 missing values generated)
+(2,689 missing values generated)
+(1,916 missing values generated)
+(1,709 missing values generated)
+(3,229 missing values generated)
+(2,814 missing values generated)
+(2,276 missing values generated)
+(1,875 missing values generated)
+(3,485 missing values generated)
+(2,869 missing values generated)
+(2,546 missing values generated)
+(1,957 missing values generated)
+(3,726 missing values generated)
+(2,906 missing values generated)
+(2,789 missing values generated)
+(2,021 missing values generated)
+
+. gen hf_fs_0  = fs_0  * high_inf
+(2,472 missing values generated)
+
+. gen hf_rfs_0 = rfs_0 * high_inf
+(1,445 missing values generated)
+
+. 
+. *----------------------------
+. * 7) Build variable lists
+. *----------------------------
+. local endo    ""
+
+. local endo_hf ""
+
+. local inst    ""
+
+. local inst_hf ""
+
+. 
+. forvalues k = `K'(-1)1 {
+  2.     local endo    "`endo'    fs_l`k'"
+  3.     local endo_hf "`endo_hf' hf_fs_l`k'"
+  4.     local inst    "`inst'    rfs_l`k'"
+  5.     local inst_hf "`inst_hf' hf_rfs_l`k'"
+  6. }
+
+. local endo    "`endo'    fs_0"
+
+. local endo_hf "`endo_hf' hf_fs_0"
+
+. local inst    "`inst'    rfs_0"
+
+. local inst_hf "`inst_hf' hf_rfs_0"
+
+. 
+. forvalues k = 1/`K' {
+  2.     local endo    "`endo'    fs_f`k'"
+  3.     local endo_hf "`endo_hf' hf_fs_f`k'"
+  4.     local inst    "`inst'    rfs_f`k'"
+  5.     local inst_hf "`inst_hf' hf_rfs_f`k'"
+  6. }
+
+. 
+. local controls "income_growth population_growth inflation high_inf dominance hhi"
+
+. 
+. *----------------------------
+. * 8) IV regression
+. *----------------------------
+. ivreghdfe price_growth ///
+>     `controls' ///
+>     (`endo' `endo_hf' = `inst' `inst_hf'), ///
+>     absorb(route carrier_id) vce(robust)
+(MWFE estimator converged in 9 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity
+
+                                                      Number of obs =     4526
+                                                      F( 24,  4423) =   128.45
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =   3893238.95                Centered R2   =   0.2489
+Total (uncentered) SS   =   3893238.95                Uncentered R2 =   0.2489
+Residual SS             =  2924214.389                Root MSE      =    25.71
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+     price_growth | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+            fs_l4 |   .1831085   .0797552     2.30   0.022     .0267485    .3394686
+            fs_l3 |   .3731777   .0570422     6.54   0.000     .2613464     .485009
+            fs_l2 |   .1904894   .0490113     3.89   0.000     .0944028    .2865761
+            fs_l1 |   .1621456   .0457481     3.54   0.000     .0724564    .2518348
+             fs_0 |  -.1613756    .076452    -2.11   0.035    -.3112597   -.0114915
+            fs_f1 |   .3531232   .0600178     5.88   0.000     .2354583    .4707881
+            fs_f2 |  -.0175787   .0390315    -0.45   0.652       -.0941    .0589426
+            fs_f3 |  -.0991148   .0357203    -2.77   0.006    -.1691446   -.0290851
+            fs_f4 |   .3733266   .0545745     6.84   0.000     .2663333    .4803199
+         hf_fs_l4 |  -.2161122   .1117853    -1.93   0.053    -.4352673    .0030429
+         hf_fs_l3 |  -.2689108   .1076407    -2.50   0.013    -.4799404   -.0578812
+         hf_fs_l2 |   .8997627   .1168967     7.70   0.000     .6705866    1.128939
+         hf_fs_l1 |   1.563316   .1556449    10.04   0.000     1.258174    1.868458
+          hf_fs_0 |    1.98687   .2099911     9.46   0.000     1.575182    2.398557
+         hf_fs_f1 |   .1087377   .1040695     1.04   0.296    -.0952907    .3127661
+         hf_fs_f2 |  -.0096282   .0972011    -0.10   0.921     -.200191    .1809347
+         hf_fs_f3 |   .1752444    .083898     2.09   0.037     .0107623    .3397266
+         hf_fs_f4 |  -.4172855   .0972367    -4.29   0.000    -.6079182   -.2266528
+    income_growth |   .8357635   .3618189     2.31   0.021     .1264174     1.54511
+population_growth |   2.125461   .7675592     2.77   0.006     .6206613    3.630262
+        inflation |   45.22252    2.76035    16.38   0.000     39.81086    50.63419
+         high_inf |  -150.6416   10.14415   -14.85   0.000    -170.5292   -130.7539
+        dominance |   1.526943   1.259838     1.21   0.226    -.9429698    3.996855
+              hhi |   .0029848   .0006152     4.85   0.000     .0017787    .0041909
+-----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):            106.097
+                                                   Chi-sq(1) P-val =    0.0000
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                9.976
+                         (Kleibergen-Paap rk Wald F statistic):          6.049
+Stock-Yogo weak ID test critical values:                       <not available>
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.000
+                                                 (equation exactly identified)
+------------------------------------------------------------------------------
+Instrumented:         fs_l4 fs_l3 fs_l2 fs_l1 fs_0 fs_f1 fs_f2 fs_f3 fs_f4
+                      hf_fs_l4 hf_fs_l3 hf_fs_l2 hf_fs_l1 hf_fs_0 hf_fs_f1
+                      hf_fs_f2 hf_fs_f3 hf_fs_f4
+Included instruments: income_growth population_growth inflation high_inf
+                      dominance hhi
+Excluded instruments: rfs_l4 rfs_l3 rfs_l2 rfs_l1 rfs_0 rfs_f1 rfs_f2 rfs_f3
+                      rfs_f4 hf_rfs_l4 hf_rfs_l3 hf_rfs_l2 hf_rfs_l1 hf_rfs_0
+                      hf_rfs_f1 hf_rfs_f2 hf_rfs_f3 hf_rfs_f4
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+       route |        72           0          72     |
+  carrier_id |         8           1           7     |
+-----------------------------------------------------+
+
+. 
+. *----------------------------
+. * 9) Pre-trend tests  *** leads −2 and −3 only ***
+. *----------------------------
+. test hf_fs_f1 hf_fs_f2
+
+ ( 1)  hf_fs_f1 = 0
+ ( 2)  hf_fs_f2 = 0
+
+       F(  2,  4423) =    0.69
+            Prob > F =    0.5008
+
+. test fs_f1 fs_f2  fs_f3
+
+ ( 1)  fs_f1 = 0
+ ( 2)  fs_f2 = 0
+ ( 3)  fs_f3 = 0
+
+       F(  3,  4423) =   22.97
+            Prob > F =    0.0000
+
+. test fs_f2  fs_f3
+
+ ( 1)  fs_f2 = 0
+ ( 2)  fs_f3 = 0
+
+       F(  2,  4423) =    4.26
+            Prob > F =    0.0141
+
+. test hf_fs_f1 hf_fs_f2 hf_fs_f3
+
+ ( 1)  hf_fs_f1 = 0
+ ( 2)  hf_fs_f2 = 0
+ ( 3)  hf_fs_f3 = 0
+
+       F(  3,  4423) =    2.12
+            Prob > F =    0.0952
+
+. test hf_fs_f2 hf_fs_f3
+
+ ( 1)  hf_fs_f2 = 0
+ ( 2)  hf_fs_f3 = 0
+
+       F(  2,  4423) =    2.97
+            Prob > F =    0.0515
+
+. 
+. *----------------------------
+. * 10) Build coefficient matrices  (NO normalization — absolute levels)
+. *      Rows: f4, f3, f2, f1, 0, l1, l2, l3, l4  →  k = -4,-3,-2,-1,0,1,2,3,4
+. *      Cols: [1]=point, [2]=CI lower, [3]=CI upper
+. *----------------------------
+. matrix total_hi = J(9, 3, .)   // Total high-inflation effect (base + increment)
+
+. matrix base_lo  = J(9, 3, .)   // Low-inflation baseline
+
+. matrix diff_mat = J(9, 3, .)   // Difference = interaction coefficient hf_fs_*
+
+. 
+. local row = 1
+
+. foreach v in f4 f3 f2 f1 0 l1 l2 l3 l4 {
+  2.     * Total high-inflation effect via lincom
+.     lincom fs_`v' + hf_fs_`v'
+  3.     matrix total_hi[`row', 1] = r(estimate)
+  4.     matrix total_hi[`row', 2] = r(estimate) - 1.96 * r(se)
+  5.     matrix total_hi[`row', 3] = r(estimate) + 1.96 * r(se)
+  6. 
+.     * Low-inflation baseline
+.     matrix base_lo[`row', 1] = _b[fs_`v']
+  7.     matrix base_lo[`row', 2] = _b[fs_`v'] - 1.96 * _se[fs_`v']
+  8.     matrix base_lo[`row', 3] = _b[fs_`v'] + 1.96 * _se[fs_`v']
+  9. 
+.     * Difference = interaction term directly
+.     matrix diff_mat[`row', 1] = _b[hf_fs_`v']
+ 10.     matrix diff_mat[`row', 2] = _b[hf_fs_`v'] - 1.96 * _se[hf_fs_`v']
+ 11.     matrix diff_mat[`row', 3] = _b[hf_fs_`v'] + 1.96 * _se[hf_fs_`v']
+ 12. 
+.     local row = `row' + 1
+ 13. }
+
+ ( 1)  fs_f4 + hf_fs_f4 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0439589   .0682564    -0.64   0.520    -.1777756    .0898578
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f3 + hf_fs_f3 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .0761296   .0742393     1.03   0.305    -.0694165    .2216757
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f2 + hf_fs_f2 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0272069   .0945512    -0.29   0.774    -.2125746    .1581608
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f1 + hf_fs_f1 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .4618609   .1116587     4.14   0.000      .242954    .6807679
+------------------------------------------------------------------------------
+
+ ( 1)  fs_0 + hf_fs_0 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.825494    .178098    10.25   0.000     1.476333    2.174655
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l1 + hf_fs_l1 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.725462   .1475651    11.69   0.000     1.436161    2.014763
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l2 + hf_fs_l2 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.090252    .109984     9.91   0.000     .8746285    1.305876
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l3 + hf_fs_l3 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .1042669   .0875542     1.19   0.234    -.0673832     .275917
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l4 + hf_fs_l4 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0330037   .0784191    -0.42   0.674    -.1867443     .120737
+------------------------------------------------------------------------------
+
+. 
+. *----------------------------
+. * 10b) LaTeX table -> tab:iv_main  (matches your template)
+. *      Uses \(...\) instead of $...$ to avoid Stata global expansion.
+. *----------------------------
+. 
+. * --- diagnostics from the §8 model (e() untouched by test/lincom) ---
+. scalar Nobs  = e(N)
+
+. scalar r2c   = e(r2c)
+
+. if missing(r2c) scalar r2c = e(r2)   // fallback: verify name via -ereturn list-
+
+. scalar rmse  = e(rmse)
+
+. scalar kplm  = e(idstat)             // KP rk LM  (verify)
+
+. scalar kplmp = e(idp)                // its p-value (verify)
+
+. scalar kpf   = e(widstat)            // KP rk Wald F (verify)
+
+. 
+. * --- helper: formatted point (with z-based stars) + SE cell ---
+. capture program drop _cell
+
+. program define _cell, rclass
+  1.     args b se
+  2.     local p = 2*normal(-abs(`b'/`se'))
+  3.     local s = cond(`p'<0.01,"***",cond(`p'<0.05,"**",cond(`p'<0.10,"*","")))
+  4.     local bs = strtrim(string(`b',"%9.3f"))
+  5.     if "`s'"!="" local bs "`bs'^{`s'}"
+  6.     local ss = strtrim(string(`se',"%9.3f"))
+  7.     return local cell   "\(`bs'\)"
+  8.     return local secell "\((`ss')\)"
+  9. end
+
+. 
+. file open tex using "$tabs/tab_iv_main.tex", write replace text
+
+. 
+. file write tex "\begin{table}[p]" _n
+
+. file write tex "\centering" _n
+
+. file write tex "\caption{Dynamics of Fuel Shock Pass-Through}" _n
+
+. file write tex "\label{tab:iv_main}" _n
+
+. file write tex "\resizebox{\textwidth}{!}{%" _n
+
+. file write tex "\begin{tabular}{lccc}" _n
+
+. file write tex "\\[-1.8ex]\hline" _n
+
+. file write tex "\hline \\[-1.8ex]" _n
+
+. file write tex "& \multicolumn{3}{c}{Pass-Through by Inflation Regime} \\" _n
+
+. file write tex "\cmidrule(lr){2-4}" _n
+
+. file write tex "& Low Inflation & High Inflation & Difference \\" _n
+
+. file write tex "& (1) & (2) & (3) \\" _n
+
+. file write tex "\hline" _n
+
+. file write tex "\multicolumn{4}{l}{\textit{Dynamic Pass-Through Coefficients:}} \\" _n
+
+. 
+. local suffixes "f4 f3 f2 f1 0 l1 l2 l3 l4"
+
+. local labels `" \(t-4\) \(t-3\) \(t-2\) \(t-1\) \(t\) \(t+1\) \(t+2\) \(t+3\) \(t+4\) "'
+
+. 
+. local i = 1
+
+. foreach v of local suffixes {
+  2.     local lab : word `i' of `labels'
+  3. 
+.     * Col 1: low-inflation baseline
+.     local b1 = _b[fs_`v']
+  4.     local s1 = _se[fs_`v']
+  5.     _cell `b1' `s1'
+  6.     local c1 "`r(cell)'"
+  7.     local e1 "`r(secell)'"
+  8. 
+.     * Col 2: high-inflation total (base + interaction)
+.     lincom fs_`v' + hf_fs_`v'
+  9.     local b2 = r(estimate)
+ 10.     local s2 = r(se)
+ 11.     _cell `b2' `s2'
+ 12.     local c2 "`r(cell)'"
+ 13.     local e2 "`r(secell)'"
+ 14. 
+.     * Col 3: difference = interaction coefficient
+.     local b3 = _b[hf_fs_`v']
+ 15.     local s3 = _se[hf_fs_`v']
+ 16.     _cell `b3' `s3'
+ 17.     local c3 "`r(cell)'"
+ 18.     local e3 "`r(secell)'"
+ 19. 
+.     file write tex "\quad `lab' & `c1' & `c2' & `c3' \\" _n
+ 20.     file write tex "& `e1' & `e2' & `e3' \\" _n
+ 21. 
+.     local i = `i' + 1
+ 22. }
+
+ ( 1)  fs_f4 + hf_fs_f4 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0439589   .0682564    -0.64   0.520    -.1777756    .0898578
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f3 + hf_fs_f3 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .0761296   .0742393     1.03   0.305    -.0694165    .2216757
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f2 + hf_fs_f2 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0272069   .0945512    -0.29   0.774    -.2125746    .1581608
+------------------------------------------------------------------------------
+
+ ( 1)  fs_f1 + hf_fs_f1 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .4618609   .1116587     4.14   0.000      .242954    .6807679
+------------------------------------------------------------------------------
+
+ ( 1)  fs_0 + hf_fs_0 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.825494    .178098    10.25   0.000     1.476333    2.174655
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l1 + hf_fs_l1 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.725462   .1475651    11.69   0.000     1.436161    2.014763
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l2 + hf_fs_l2 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.090252    .109984     9.91   0.000     .8746285    1.305876
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l3 + hf_fs_l3 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .1042669   .0875542     1.19   0.234    -.0673832     .275917
+------------------------------------------------------------------------------
+
+ ( 1)  fs_l4 + hf_fs_l4 = 0
+
+------------------------------------------------------------------------------
+price_growth | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |  -.0330037   .0784191    -0.42   0.674    -.1867443     .120737
+------------------------------------------------------------------------------
+
+. 
+. file write tex "\\" _n
+
+. file write tex "\hline" _n
+
+. file write tex "Observations & \multicolumn{3}{c}{" (strtrim(string(Nobs,"%9.0fc"))) "} \\" _n
+
+. file write tex "Controls & \multicolumn{3}{c}{Yes} \\" _n
+
+. file write tex "Route FE & \multicolumn{3}{c}{Yes} \\" _n
+
+. file write tex "Carrier FE & \multicolumn{3}{c}{Yes} \\" _n
+
+. file write tex "Centered R-squared & \multicolumn{3}{c}{" (string(r2c,"%4.3f")) "} \\" _n
+
+. file write tex "Root MSE & \multicolumn{3}{c}{" (string(rmse,"%4.2f")) "} \\" _n
+
+. file write tex "\multicolumn{4}{l}{\textit{First-Stage Diagnostics}} \\" _n
+
+. file write tex "Kleibergen-Paap rk LM statistic & \multicolumn{3}{c}{" (string(kplm,"%5.3f")) "} \\" _n
+
+. file write tex "\quad \(p\)-value & \multicolumn{3}{c}{" (string(kplmp,"%4.3f")) "} \\" _n
+
+. file write tex "Kleibergen-Paap rk Wald \(F\) & \multicolumn{3}{c}{" (string(kpf,"%5.3f")) "} \\" _n
+
+. file write tex "\hline \\[-1.8ex]" _n
+
+. file write tex "\end{tabular}" _n
+
+. file write tex "}" _n
+
+. file write tex "\begin{tablenotes}[Note]" _n
+
+. file write tex "IV (2SLS) estimates. The dependent variable is price growth. Columns (1) and (2) report dynamic pass-through coefficients for low- and high-inflation
+>  regimes; Column (3) reports the high-minus-low difference (the interaction effect in Equation~\ref{eq:event_study}). Fuel shocks are AR(4) residuals of carrier-quar
+> ter fuel growth, instrumented with the national jet-fuel price series. All regressions include controls for income growth, population growth, inflation, a high-infla
+> tion indicator, route dominance, and HHI, as well as carrier and route fixed effects. Robust standard errors are in parentheses. \(^{*}p<0.10\), \(^{**}p<0.05\), \(^
+> {***}p<0.01\)." _n
+
+. file write tex "\end{tablenotes}" _n
+
+. file write tex "\end{table}" _n
+
+. 
+. file close tex
+
+. di as result "Wrote $tabs/tab_iv_main.tex"
+Wrote /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/event_study/tables/tab_iv_main.tex
+
+. *----------------------------
+. * 11) Dual-axis event-study graph
+. *
+. *  FIX: Both axes share the same explicit [lmin, lmax] coordinate range.
+. *  The scale factor sf maps diff units → left-axis units. Because yaxis(2)
+. *  spans the same numerical range as yaxis(1), a bar at height diff*sf on
+. *  the left aligns perfectly with the right-axis tick labelled diff.
+. *----------------------------
+. preserve
+
+.     clear
+
+.     set obs 9
+Number of observations (_N) was 0, now 9.
+
+.     gen k = _n - 5      // k ∈ {-3,-2,-1, 0, 1, 2, 3}
+
+. 
+.     gen coef_lo  = .
+(9 missing values generated)
+
+.     gen cilo_lo  = .
+(9 missing values generated)
+
+.     gen cihi_lo  = .
+(9 missing values generated)
+
+.     gen coef_hi  = .
+(9 missing values generated)
+
+.     gen cilo_hi  = .
+(9 missing values generated)
+
+.     gen cihi_hi  = .
+(9 missing values generated)
+
+.     gen diff     = .
+(9 missing values generated)
+
+.     gen diff_lo  = .
+(9 missing values generated)
+
+.     gen diff_hi  = .
+(9 missing values generated)
+
+. 
+.     forvalues i = 1/9 {
+  2.         replace coef_lo  = base_lo[`i', 1]  if _n == `i'
+  3.         replace cilo_lo  = base_lo[`i', 2]  if _n == `i'
+  4.         replace cihi_lo  = base_lo[`i', 3]  if _n == `i'
+  5.         replace coef_hi  = total_hi[`i', 1] if _n == `i'
+  6.         replace cilo_hi  = total_hi[`i', 2] if _n == `i'
+  7.         replace cihi_hi  = total_hi[`i', 3] if _n == `i'
+  8.         replace diff     = diff_mat[`i', 1] if _n == `i'
+  9.         replace diff_lo  = diff_mat[`i', 2] if _n == `i'
+ 10.         replace diff_hi  = diff_mat[`i', 3] if _n == `i'
+ 11.     }
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+
+.         keep if inrange(k, -3, 3)
+(2 observations deleted)
+
+. 
+.     twoway ///
+>         (bar  diff k,                                ///
+>               barwidth(0.65) fcolor(gs12%60) lcolor(none) base(0)) ///
+>         (rcap diff_lo diff_hi k,                     ///
+>               lcolor(gs7) lwidth(thin))               ///
+>         (connected coef_lo k,                        ///
+>               lcolor(`lc') lpattern(dash) lwidth(`lw') ///
+>               msymbol(D) mcolor(`lc') msize(small))  ///
+>         (connected coef_hi k,                        ///
+>               lcolor(`lc2') lpattern(solid) lwidth(`lw') ///
+>               msymbol(O) mcolor(`lc2') msize(small)) ///
+>         ,                                            ///
+>         yline(0, lcolor(gs10) lwidth(thin) lpattern(dash))                ///
+>         xline(-0.5, lcolor(gs6) lwidth(vthin) lpattern(shortdash))         ///
+>         xlabel(-3(1)3, labsize(small))                                     ///
+>         xtitle("Quarters relative to shock", `axis_opt')                   ///
+>         ylabel(, labsize(small) angle(0)                                   ///
+>                glcolor(gs14) glwidth(vthin) glpattern(dash))               ///
+>         ytitle("Effect on price growth", `axis_opt')                       ///
+>         title("Fuel Shock Pass-Through: Low vs. High Inflation",           ///
+>               `title_opt')                                                  ///
+>         legend(order(3 4 1 2)                                              ///
+>                label(1 "Difference (High {&minus} Low)")                   ///
+>                label(2 "95% CI (Difference)")                              ///
+>                label(3 "Low inflation pass-through")                       ///
+>                label(4 "High inflation pass-through")                      ///
+>                rows(2) size(vsmall) position(6) ring(1)                    ///
+>                region(lcolor(gs12) fcolor(white)))                         ///
+>         note("Negetive quarters = pre-shock; positive quarters = post-shock." ///
+>              "Vertical line = shock date. Bands = 95% CI.", `note_opt')   ///
+>         `region'                                                            ///
+>         xsize(11) ysize(5.5)
+
+.     graph export "$figs/fig_es_lowhigh.png", replace width(3300)
+file /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/event_study/figs/fig_es_lowhigh.png saved as PNG format
+
+. restore
+
+. 
+. *----------------------------
+. * 12) Fuel shock over time with high-inflation shading
+. *----------------------------
+. preserve
+
+.     collapse (mean) fuel_shock high_inf, by(quarter_date)
+
+.     format quarter_date %tq
+
+.     sort quarter_date
+
+. 
+.     sum fuel_shock
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  fuel_shock |         37    -.051248    16.39173  -27.83143   50.13478
+
+.     local ymin = floor(r(min)) - 5
+
+.     local ymax = ceil(r(max))  + 5
+
+. 
+.     gen band_lo = `ymin' if high_inf == 1
+(29 missing values generated)
+
+.     gen band_hi = `ymax' if high_inf == 1
+(29 missing values generated)
+
+. 
+.     local xq1 = yq(2014,3)
+
+.     local xq2 = yq(2017,1)
+
+.     local xq3 = yq(2019,3)
+
+.     local xq4 = yq(2022,1)
+
+.     local xq5 = yq(2024,3)
+
+. 
+.     twoway ///
+>         (bar  band_hi  quarter_date, ///
+>               barwidth(1) fcolor(red%12) lcolor(none) base(`ymin')) ///
+>         (bar  fuel_shock quarter_date, ///
+>               barwidth(0.8) fcolor(navy%35) lcolor(navy) base(0)) ///
+>         , ///
+>         yline(0, lcolor(gs10%70) lwidth(thin) lpattern(dash)) ///
+>         title("Fuel Shock Over Time — AR(`p') Construction", `title_opt') ///
+>         ytitle("Mean fuel shock (residual)", `axis_opt') ///
+>         xtitle("Quarter", `axis_opt') ///
+>         xlab(`xq1' "2014q3" `xq2' "2017q1" `xq3' "2019q3" ///
+>              `xq4' "2022q1" `xq5' "2024q3", labsize(small)) ///
+>         ylab(, labsize(small) angle(0) glcolor(gs14) glwidth(vthin) ///
+>                glpattern(dash)) ///
+>         legend(order(1 "High inflation period" 2 "Fuel shock (AR`p')") ///
+>                rows(1) size(small) position(6) ring(1) ///
+>                region(lcolor(gs12) fcolor(white))) ///
+>         note("Red shading = high inflation quarters (inflation > 3%)." ///
+>              "Bars are the residuals of carrier-quarter jetfuel growth AR(`p').", ///
+>              `note_opt') ///
+>         plotregion(color(white) lcolor(none)) ///
+>         graphregion(color(white) margin(medsmall)) ///
+>         xsize(11) ysize(5)
+
+.     graph export "$figs/fig_fuel_shock_time.png", replace width(3300)
+file /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/event_study/figs/fig_fuel_shock_time.png saved as PNG format
+
+. restore
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/event_study/logs/dynamic-pass-through.log
+  log type:  text
+ closed on:  17 Aug 2026, 13:50:00
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,66 @@
+-----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/LaCie/Download MacPro/Research/Cost Pass Through/output/baseline/logs/bas
+> eline_passthrough.log
+  log type:  text
+ opened on:  27 Aug 2026, 19:14:24
+
+. 
+. use "$data", clear
+
+. xtset panel_id quarter_date
+
+Panel variable: panel_id (unbalanced)
+ Time variable: quarter_date, 2014q1 to 2025q1, but with gaps
+         Delta: 1 quarter
+
+. 
+end of do-file
+
+. tab carrier_type carrier_id
+
+   Carrier |
+technology |                     Carrier's factor variable
+      type |    Alaska   American      Delta   Frontier    JetBlue  Southwest |     Total
+-----------+------------------------------------------------------------------+----------
+    Legacy |       416      1,517      1,566          0          0          0 |     4,729 
+       LCC |         0          0          0          0        378      1,733 |     2,111 
+      ULCC |         0          0          0      1,407          0          0 |     3,128 
+-----------+------------------------------------------------------------------+----------
+     Total |       416      1,517      1,566      1,407        378      1,733 |     9,968 
+
+
+   Carrier |   Carrier's factor
+technology |       variable
+      type |    Spirit     United |     Total
+-----------+----------------------+----------
+    Legacy |         0      1,230 |     4,729 
+       LCC |         0          0 |     2,111 
+      ULCC |     1,721          0 |     3,128 
+-----------+----------------------+----------
+     Total |     1,721      1,230 |     9,968 
+
+. tab carrier_type carrier_id
+
+   Carrier |
+technology |                          Carrier's factor variable
+      type |    Alaska   American      Delta   Frontier    JetBlue  Southwest     Spirit |     Total
+-----------+-----------------------------------------------------------------------------+----------
+    Legacy |       416      1,517      1,566          0          0          0          0 |     4,729 
+       LCC |         0          0          0          0        378      1,733          0 |     2,111 
+      ULCC |         0          0          0      1,407          0          0      1,721 |     3,128 
+-----------+-----------------------------------------------------------------------------+----------
+     Total |       416      1,517      1,566      1,407        378      1,733      1,721 |     9,968 
+
+
+           | Carrier's
+   Carrier |   factor
+technology |  variable
+      type |    United |     Total
+-----------+-----------+----------
+    Legacy |     1,230 |     4,729 
+       LCC |         0 |     2,111 
+      ULCC |         0 |     3,128 
+-----------+-----------+----------
+     Total |     1,230 |     9,968 
+

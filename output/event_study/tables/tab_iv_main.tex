@@ -1,0 +1,51 @@
+\begin{table}[p]
+\centering
+\caption{Dynamics of Fuel Shock Pass-Through}
+\label{tab:iv_main}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{3}{c}{Pass-Through by Inflation Regime} \\
+\cmidrule(lr){2-4}
+& Low Inflation & High Inflation & Difference \\
+& (1) & (2) & (3) \\
+\hline
+\multicolumn{4}{l}{\textit{Dynamic Pass-Through Coefficients:}} \\
+\quad \(t-4\) & \(0.373^{***}\) & \(-0.044\) & \(-0.417^{***}\) \\
+& \((0.055)\) & \((0.068)\) & \((0.097)\) \\
+\quad \(t-3\) & \(-0.099^{***}\) & \(0.076\) & \(0.175^{**}\) \\
+& \((0.036)\) & \((0.074)\) & \((0.084)\) \\
+\quad \(t-2\) & \(-0.018\) & \(-0.027\) & \(-0.010\) \\
+& \((0.039)\) & \((0.095)\) & \((0.097)\) \\
+\quad \(t-1\) & \(0.353^{***}\) & \(0.462^{***}\) & \(0.109\) \\
+& \((0.060)\) & \((0.112)\) & \((0.104)\) \\
+\quad \(t\) & \(-0.161^{**}\) & \(1.825^{***}\) & \(1.987^{***}\) \\
+& \((0.076)\) & \((0.178)\) & \((0.210)\) \\
+\quad \(t+1\) & \(0.162^{***}\) & \(1.725^{***}\) & \(1.563^{***}\) \\
+& \((0.046)\) & \((0.148)\) & \((0.156)\) \\
+\quad \(t+2\) & \(0.190^{***}\) & \(1.090^{***}\) & \(0.900^{***}\) \\
+& \((0.049)\) & \((0.110)\) & \((0.117)\) \\
+\quad \(t+3\) & \(0.373^{***}\) & \(0.104\) & \(-0.269^{**}\) \\
+& \((0.057)\) & \((0.088)\) & \((0.108)\) \\
+\quad \(t+4\) & \(0.183^{**}\) & \(-0.033\) & \(-0.216^{*}\) \\
+& \((0.080)\) & \((0.078)\) & \((0.112)\) \\
+\\
+\hline
+Observations & \multicolumn{3}{c}{4,526} \\
+Controls & \multicolumn{3}{c}{Yes} \\
+Route FE & \multicolumn{3}{c}{Yes} \\
+Carrier FE & \multicolumn{3}{c}{Yes} \\
+Centered R-squared & \multicolumn{3}{c}{0.249} \\
+Root MSE & \multicolumn{3}{c}{25.71} \\
+\multicolumn{4}{l}{\textit{First-Stage Diagnostics}} \\
+Kleibergen-Paap rk LM statistic & \multicolumn{3}{c}{106.097} \\
+\quad \(p\)-value & \multicolumn{3}{c}{0.000} \\
+Kleibergen-Paap rk Wald \(F\) & \multicolumn{3}{c}{6.049} \\
+\hline \\[-1.8ex]
+\end{tabular}
+}
+\begin{tablenotes}[Note]
+IV (2SLS) estimates. The dependent variable is price growth. Columns (1) and (2) report dynamic pass-through coefficients for low- and high-inflation regimes; Column (3) reports the high-minus-low difference (the interaction effect in Equation~\ref{eq:event_study}). Fuel shocks are AR(4) residuals of carrier-quarter fuel growth, instrumented with the national jet-fuel price series. All regressions include controls for income growth, population growth, inflation, a high-inflation indicator, route dominance, and HHI, as well as carrier and route fixed effects. Robust standard errors are in parentheses. \(^{*}p<0.10\), \(^{**}p<0.05\), \(^{***}p<0.01\).
+\end{tablenotes}
+\end{table}

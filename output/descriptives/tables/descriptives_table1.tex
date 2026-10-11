@@ -1,0 +1,48 @@
+% Required packages: booktabs, rotating, threeparttable, graphicx
+% \usepackage{booktabs,rotating,threeparttable,graphicx}
+
+\begin{sidewaystable}[p]
+\centering
+\begin{threeparttable}
+\caption{Summary statistics}
+\label{tab:descriptives}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l *{3}{rrrrrr}}
+\toprule
+ & \multicolumn{6}{c}{Full Sample} & \multicolumn{6}{c}{Low Inflation} & \multicolumn{6}{c}{High Inflation} \\
+\cmidrule(lr){2-7}\cmidrule(lr){8-13}\cmidrule(lr){14-19}
+ & $ & Mean & SD & p10 & p50 & p90 & $ & Mean & SD & p10 & p50 & p90 & $ & Mean & SD & p10 & p50 & p90 \\
+\midrule
+\multicolumn{19}{l}{\textit{Panel A: Prices and Costs}} \\
+Ticket price (USD) &        9,728 &    154.61 &     78.83 &     61.91 &    148.97 &    252.27 &        5,461 &    142.69 &     71.73 &     56.07 &    141.11 &    225.01 &        3,614 &    166.60 &     86.28 &     67.37 &    157.50 &    274.27 \\
+Log price &        9,728 &      4.91 &      0.54 &      4.13 &      5.00 &      5.53 &        5,461 &      4.83 &      0.54 &      4.03 &      4.95 &      5.42 &        3,614 &      4.98 &      0.54 &      4.21 &      5.06 &      5.61 \\
+Price growth (\%) &        8,363 &      3.97 &     28.89 &    -26.04 &     -0.37 &     39.31 &        5,030 &     -5.68 &     19.30 &    -31.45 &     -4.30 &     15.88 &        3,333 &     18.53 &     34.34 &    -15.46 &      8.24 &     68.30 \\
+Fuel cost (USD/gal) &        9,728 &      2.20 &      0.67 &      1.43 &      2.08 &      3.13 &        5,461 &      1.76 &      0.35 &      1.26 &      1.80 &      2.15 &        3,614 &      2.75 &      0.57 &      2.06 &      2.68 &      3.55 \\
+Fuel growth (\%) &        8,363 &      6.09 &     38.01 &    -38.24 &     -3.11 &     67.97 &        5,030 &     -6.23 &     25.98 &    -39.56 &     -7.07 &     26.92 &        3,333 &     24.68 &     45.09 &    -24.87 &      6.11 &     83.76 \\
+Jet fuel price (USD/gal) &        9,728 &      2.04 &      0.70 &      1.27 &      1.90 &      2.93 &        5,461 &      1.56 &      0.35 &      1.07 &      1.56 &      1.96 &        3,614 &      2.63 &      0.58 &      1.90 &      2.62 &      3.36 \\
+Jet fuel growth (\%) &        9,075 &      9.14 &     47.31 &    -42.69 &     -1.04 &     84.17 &        5,461 &     -6.73 &     31.09 &    -44.27 &     -7.89 &     34.05 &        3,614 &     33.12 &     56.60 &    -23.50 &      8.56 &    126.15 \\
+Inflation &        9,075 &      3.05 &      1.51 &      1.67 &      2.22 &      5.98 &        5,461 &      1.97 &      0.28 &      1.64 &      2.05 &      2.25 &        3,614 &      4.68 &      1.10 &      3.27 &      4.41 &      6.27 \\
+PPI air transport &        9,728 &     137.7 &      16.2 &     121.1 &     131.7 &     160.8 &        5,461 &     126.3 &       4.4 &     120.9 &     126.0 &     132.4 &        3,614 &     157.4 &       8.1 &     142.2 &     159.6 &     166.1 \\
+\midrule
+\multicolumn{19}{l}{\textit{Panel B: Market Structure}} \\
+Route share (\%) &        9,728 &     32.41 &     21.43 &      9.54 &     27.04 &     62.98 &        5,461 &     32.82 &     21.76 &      9.60 &     27.48 &     63.85 &        3,614 &     29.71 &     18.80 &      9.28 &     24.89 &     56.35 \\
+HHI &        9,728 &    4124.8 &    1444.7 &    2789.1 &    3731.1 &    5850.6 &        5,461 &    4160.2 &    1489.2 &    2788.3 &    3721.0 &    5944.7 &        3,614 &    3856.8 &    1103.5 &    2755.4 &    3637.2 &    5249.5 \\
+No.\ carriers &        9,728 &      3.40 &      0.94 &      2.00 &      3.00 &      4.00 &        5,461 &      3.37 &      0.94 &      2.00 &      3.00 &      4.00 &        3,614 &      3.58 &      0.88 &      3.00 &      4.00 &      5.00 \\
+High HHI (HHI $>$ 2500) &        9,728 &      0.96 &      0.19 &      1.00 &      1.00 &      1.00 &        5,461 &      0.96 &      0.19 &      1.00 &      1.00 &      1.00 &        3,614 &      0.96 &      0.19 &      1.00 &      1.00 &      1.00 \\
+Dominance: share $>$ 50\% &        9,728 &      0.20 &      0.40 &      0.00 &      0.00 &      1.00 &        5,461 &      0.20 &      0.40 &      0.00 &      0.00 &      1.00 &        3,614 &      0.16 &      0.37 &      0.00 &      0.00 &      1.00 \\
+\midrule
+\multicolumn{19}{l}{\textit{Panel C: Demand-Side Controls}} \\
+Passengers &        9,728 &    5832.7 &    4270.4 &    1611.0 &    4684.5 &   11970.0 &        5,461 &    5676.1 &    4356.7 &    1460.0 &    4470.0 &   11904.0 &        3,614 &    6114.3 &    4204.8 &    1842.0 &    5119.0 &   12211.0 \\
+Revenue ($000s) &        9,728 &    1034.2 &    1173.8 &     134.5 &     635.5 &    2347.1 &        5,461 &     939.6 &    1098.2 &     111.1 &     557.3 &    2149.8 &        3,614 &    1161.7 &    1293.0 &     170.4 &     709.6 &    2642.8 \\
+Median income ($) &        9,728 &  109194.6 &   17848.0 &   86772.8 &  107473.4 &  134222.0 &        5,461 &  101362.1 &   11943.8 &   86251.4 &  100354.7 &  117133.4 &        3,614 &  125266.3 &   13530.2 &  108052.0 &  124374.1 &  143742.5 \\
+Population (000s) &        9,728 &    5714.1 &    2950.3 &    2781.9 &    4953.4 &   10042.6 &        5,461 &    5626.9 &    2913.9 &    2702.4 &    4774.7 &    9941.1 &        3,614 &    5884.4 &    2975.6 &    2872.9 &    5156.7 &   10386.0 \\
+Income growth &        8,363 &     4.833 &     2.619 &     1.496 &     4.962 &     7.913 &        5,030 &     4.540 &     1.852 &     2.695 &     4.603 &     6.787 &        3,333 &     5.275 &     3.423 &    -0.873 &     5.825 &     9.262 \\
+Population growth &        8,363 &     0.927 &     0.863 &    -0.135 &     0.916 &     1.998 &        5,030 &     0.881 &     0.746 &     0.006 &     0.917 &     1.815 &        3,333 &     0.998 &     1.010 &    -0.218 &     0.890 &     2.450 \\
+\bottomrule
+\end{tabular}%
+}
+\begin{tablenotes}[Note]
+Unit of observation is route--carrier--quarter. High inflation equals one when inflation is greater than 3 percent. Low inflation equals one when inflation is less than or equal to 3 percent. High HHI equals one when HHI is greater than 2500. Dominance equals one when the carrier's route share exceeds 50 percent. Revenue is in thousands of USD; population is in thousands.
+\end{tablenotes}
+\end{threeparttable}
+\end{sidewaystable}
